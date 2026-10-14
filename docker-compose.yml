@@ -1,0 +1,66 @@
+# Оркестрация микросервисов лабораторной работы №2 (Docker + Docker Compose).
+#
+# Исходники микросервисов подключены как git-подмодули в каталоги
+# ./backend и ./frontend, поэтому образы собираются автоматически из
+# их Dockerfile (пункт 4.1 задания).
+#
+# Соответствие пунктам задания:
+#   4.1 — build из ./backend и ./frontend, имена образов backend:2.0 / frontend:2.0
+#   4.2 — том backend-data хранит data.txt вне контейнера
+#   4.3 — общая сеть devops-net; у бэкенда порты наружу не пробрасываются
+#   4.4 — frontend зависит от backend (depends_on)
+#   4.5 — restart: always (перезапуск после перезагрузки сервера/демона)
+
+services:
+  backend:
+    build:
+      context: ./backend
+    image: backend:2.0
+    container_name: devops-backend
+    environment:
+      HOST: 0.0.0.0
+      PORT: "5001"
+      DATA_FILE: /data/data.txt
+    volumes:
+      # Данные data.txt хранятся в именованном томе и переживают
+      # пересоздание/перезагрузку контейнера (пункт 4.2).
+      - backend-data:/data
+    networks:
+      - devops-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; urllib.request.urlopen('http://127.0.0.1:5001/api/health'); sys.exit(0)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    image: frontend:2.0
+    container_name: devops-frontend
+    environment:
+      HOST: 0.0.0.0
+      PORT: "5000"
+      # Обращение к бэкенду по имени сервиса во внутренней сети Docker.
+      BACKEND_URL: http://backend:5001
+    ports:
+      # Публикуется только фронтенд, и только на локальном интерфейсе.
+      # Порт бэкенда наружу не пробрасывается.
+      - "127.0.0.1:5000:5000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - devops-net
+    restart: always
+
+networks:
+  # Отдельная пользовательская сеть для взаимодействия контейнеров.
+  devops-net:
+    driver: bridge
+
+volumes:
+  # Именованный том для сохранения data.txt вне контейнера.
+  backend-data:

@@ -1,0 +1,8 @@
+* text=auto
+
+# docker-compose.yml всегда с LF — иначе возможны проблемы с парсингом
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sh text eol=lf

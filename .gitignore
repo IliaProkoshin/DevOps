@@ -1,0 +1,9 @@
+# Локальные данные и служебные файлы
+.env
+*.log
+
+# Служебные каталоги IDE/ОС
+.idea/
+.vscode/
+Thumbs.db
+desktop.ini
