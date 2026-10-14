@@ -1,16 +1,3 @@
-# Оркестрация микросервисов лабораторной работы №2 (Docker + Docker Compose).
-#
-# Исходники микросервисов подключены как git-подмодули в каталоги
-# ./backend и ./frontend, поэтому образы собираются автоматически из
-# их Dockerfile (пункт 4.1 задания).
-#
-# Соответствие пунктам задания:
-#   4.1 — build из ./backend и ./frontend, имена образов backend:2.0 / frontend:2.0
-#   4.2 — том backend-data хранит data.txt вне контейнера
-#   4.3 — общая сеть devops-net; у бэкенда порты наружу не пробрасываются
-#   4.4 — frontend зависит от backend (depends_on)
-#   4.5 — restart: always (перезапуск после перезагрузки сервера/демона)
-
 services:
   backend:
     build:
@@ -23,8 +10,6 @@ services:
       DATA_FILE: /data/data.txt
       DEBUG: "false"
     volumes:
-      # Данные data.txt хранятся в именованном томе и переживают
-      # пересоздание/перезагрузку контейнера (пункт 4.2).
       - backend-data:/data
     networks:
       - devops-net
@@ -47,8 +32,6 @@ services:
       BACKEND_URL: http://backend:5001
       DEBUG: "false"
     ports:
-      # Публикуется только фронтенд, и только на локальном интерфейсе.
-      # Порт бэкенда наружу не пробрасывается.
       - "127.0.0.1:5000:5000"
     depends_on:
       backend:
@@ -58,10 +41,8 @@ services:
     restart: always
 
 networks:
-  # Отдельная пользовательская сеть для взаимодействия контейнеров.
   devops-net:
     driver: bridge
 
 volumes:
-  # Именованный том для сохранения data.txt вне контейнера.
   backend-data:
