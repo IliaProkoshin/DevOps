@@ -1,8 +1,8 @@
 # DevOps
 
-Репозиторий оркестрации микросервисов **frontend** и **backend** (версия 2.0).
-Остановка и запуск через Docker Compose описаны в разделе про ЛР2,
-развертывание на удаленной ноде через Ansible — в разделе про ЛР3.
+Репозиторий оркестрации микросервисов **frontend** и **backend** версий 2.0.
+Остановка и запуск через Docker Compose описаны в ЛР2,
+развертывание на удаленной ноде через Ansible в ЛР3.
 
 ## Состав
 
@@ -13,7 +13,7 @@ DevOps/
 └── frontend/            # git-подмодуль → IliaProkoshin/frontend (v2.0)
 ```
 
-Микросервисы подключены как git-подмодули, а Dockerfile лежит в каждом из
+Микросервисы подключены как git-подмодули, Dockerfile лежит в каждом из
 репозиториев микросервисов. Compose собирает образы из этих Dockerfile.
 
 ## Требования
@@ -57,47 +57,17 @@ curl -X POST http://127.0.0.1:5000/api/data -H "Content-Type: application/json" 
 curl http://127.0.0.1:5000/api/data
 ```
 
-## Лабораторная работа №3 — Ansible
+## ЛР3 Ansible
 
 В каталоге `ansible/` находится Ansible-проект, который устанавливает Docker
-и Docker Compose на удаленную ноду, клонирует туда этот репозиторий вместе
-с микросервисами (подмодули frontend и backend) и запускает/останавливает
-сервисы через Docker Compose.
-
-### Структура проекта
-
-```
-ansible/
-├── ansible.cfg                 # конфигурация ansible
-├── hosts                       # инвентарь с группой devops_nodes
-├── requirements.yml            # коллекции galaxy
-├── run_playbook.yml            # главный плейбук
-├── group_vars/
-│   └── all/
-│       ├── vars.yml            # общие переменные (репо, каталог, ветка)
-│       └── vault.yml           # секреты, зашифрованы ansible-vault
-├── host_vars/
-│   └── host01/
-│       ├── vars.yml            # переменные конкретной ноды
-│       └── vault.yml           # секреты ноды (become-пароль)
-└── roles/
-    ├── docker/                 # установка docker и docker compose
-    │   ├── defaults/
-    │   ├── handlers/           # Restart docker при изменении daemon.json
-    │   ├── tasks/
-    │   └── templates/          # daemon.json.j2
-    └── deploy/                 # клонирование репозитория и управление compose
-        ├── defaults/
-        ├── handlers/           # Recreate services при изменении .env
-        ├── tasks/
-        └── templates/          # env.j2 (COMPOSE_PROJECT_NAME)
-```
+и Docker Compose на удаленную ноду, клонирует туда  репозиторий вместе
+с микросервисами (подмодули frontend и backend), запускает/останавливает
+сервисы через Docker Compose
 
 ### Стенд
 
-Контроллер ansible — WSL2 Ubuntu-24.04, удаленная нода — WSL2 Ubuntu-22.04,
-связь по ssh (пользователь ansible, ключ авторизации). Так как дистрибутивы
-WSL засыпают при простое, перед работой нода удерживается запущенной:
+Контроллер ansible WSL2 Ubuntu-24.04, удаленная нода WSL2 Ubuntu-22.04,
+связь по ssh (пользователь ansible, ключ авторизации)
 
 ```bash
 wsl -d Ubuntu-22.04 --exec sleep infinity
@@ -109,7 +79,7 @@ wsl -d Ubuntu-22.04 --exec sleep infinity
 cd ansible
 ansible-galaxy collection install -r requirements.yml
 
-# Полная раскатка: docker + clone + запуск сервисов
+# docker + clone + запуск сервисов
 ansible-playbook run_playbook.yml --ask-vault-pass --tags deploy
 
 # Только запуск сервисов
@@ -119,9 +89,6 @@ ansible-playbook run_playbook.yml --ask-vault-pass --tags start
 ansible-playbook run_playbook.yml --ask-vault-pass --tags stop
 ```
 
-Теги: `install`, `clone`, `start`, `stop`, `deploy` (deploy включает
-установку docker, клонирование и старт сервисов).
+Теги: `install`, `clone`, `start`, `stop`, `deploy`
 
-Пароль для расшифровки vault-файлов: `ilya_prokoshin`. Отдельный токен GitHub
-(`vault_git_token` в `group_vars/all/vault.yml`) используется автоматически,
-если репозитории приватные; для публичных оставляется пустым.
+Пароль для расшифровки vault-файлов: `ilya_prokoshin`
