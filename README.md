@@ -122,6 +122,6 @@ ansible-playbook run_playbook.yml --ask-vault-pass --tags stop
 Теги: `install`, `clone`, `start`, `stop`, `deploy` (deploy включает
 установку docker, клонирование и старт сервисов).
 
-Пароль для расшифровки vault-файлов: `devops23`. Отдельный токен GitHub
+Пароль для расшифровки vault-файлов: `ilya_prokoshin`. Отдельный токен GitHub
 (`vault_git_token` в `group_vars/all/vault.yml`) используется автоматически,
 если репозитории приватные; для публичных оставляется пустым.
