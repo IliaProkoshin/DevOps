@@ -1,8 +1,8 @@
 # DevOps
 
-Репозиторий оркестрации микросервисов **frontend** и **backend** версий 2.0.
-Остановка и запуск через Docker Compose описаны в ЛР2,
-развертывание на удаленной ноде через Ansible в ЛР3.
+Репозиторий оркестрации микросервисов frontend и backend версий 2.0
+Остановка и запуск через Docker Compose описаны в ЛР2
+развертывание на удаленной ноде через Ansible в ЛР3
 
 ## Состав
 
@@ -14,11 +14,11 @@ DevOps/
 ```
 
 Микросервисы подключены как git-подмодули, Dockerfile лежит в каждом из
-репозиториев микросервисов. Compose собирает образы из этих Dockerfile.
+репозиториев микросервисов. Compose собирает образы из этих Dockerfile
 
 ## Требования
 
-- Docker Desktop (Docker Engine + Docker Compose v2).
+- Docker Desktop (Docker Engine + Docker Compose v2)
 
 ## Запуск
 
@@ -31,9 +31,7 @@ cd DevOps
 docker compose up --build -d
 ```
 
-После запуска приложение доступно в браузере:
-
-<http://127.0.0.1:5000>
+После запуска приложение доступно в браузере: <http://127.0.0.1:5000>
 
 Остановка:
 
@@ -50,7 +48,7 @@ docker compose down -v
 ## Проверка взаимодействия
 
 ```bash
-# Отправить данные через API фронтенда (браузер делает это автоматически)
+# Отправить данные через API фронтенда
 curl -X POST http://127.0.0.1:5000/api/data -H "Content-Type: application/json" -d "{\"text\": \"Привет из Docker\"}"
 
 # Прочитать сохраненные данные
@@ -89,6 +87,6 @@ ansible-playbook run_playbook.yml --ask-vault-pass --tags start
 ansible-playbook run_playbook.yml --ask-vault-pass --tags stop
 ```
 
-Теги: `install`, `clone`, `start`, `stop`, `deploy`
+Теги `install`, `clone`, `start`, `stop`, `deploy`
 
-Пароль для расшифровки vault-файлов: `ilya_prokoshin`
+Пароль для расшифровки vault-файлов `ilya_prokoshin`
