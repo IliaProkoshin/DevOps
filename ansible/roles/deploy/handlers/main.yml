@@ -1,0 +1,4 @@
+- name: Recreate services
+  ansible.builtin.command:
+    cmd: docker compose up -d
+    chdir: "{{ deploy_dir }}"

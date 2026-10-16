@@ -1,0 +1,4 @@
+github_org: IliaProkoshin
+devops_repo: "https://github.com/{{ github_org }}/DevOps.git"
+devops_repo_branch: main
+deploy_dir: /opt/devops

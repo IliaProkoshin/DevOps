@@ -1,0 +1,33 @@
+- name: Prepare repository url
+  ansible.builtin.set_fact:
+    devops_repo_url: >-
+      {{ devops_repo if vault_git_token | default('') | length == 0
+         else devops_repo | replace('https://github.com', 'https://' ~ vault_git_token ~ '@github.com') }}
+  tags: [clone, deploy]
+
+- name: Clone devops repository with microservices
+  ansible.builtin.git:
+    repo: "{{ devops_repo_url }}"
+    dest: "{{ deploy_dir }}"
+    version: "{{ devops_repo_branch }}"
+  tags: [clone, deploy]
+
+- name: Render compose environment file
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ deploy_dir }}/{{ compose_env_file }}"
+    mode: "0644"
+  notify: Recreate services
+  tags: [clone, start, deploy]
+
+- name: Start microservices
+  community.docker.docker_compose_v2:
+    project_src: "{{ deploy_dir }}"
+    state: present
+  tags: [start, deploy]
+
+- name: Stop microservices
+  community.docker.docker_compose_v2:
+    project_src: "{{ deploy_dir }}"
+    state: absent
+  tags: [stop]

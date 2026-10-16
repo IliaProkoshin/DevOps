@@ -1,0 +1,6 @@
+- name: Deploy microservices on remote node
+  hosts: devops_nodes
+  become: true
+  roles:
+    - docker
+    - deploy

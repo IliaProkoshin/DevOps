@@ -1,0 +1,2 @@
+ansible_become_password: "{{ vault_ansible_password }}"
+compose_project_name: devops

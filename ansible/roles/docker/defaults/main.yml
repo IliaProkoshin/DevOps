@@ -1,0 +1,15 @@
+docker_base_packages:
+  - ca-certificates
+  - curl
+  - gnupg
+  - git
+
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+docker_log_max_size: 10m
+docker_log_max_files: 3
