@@ -1,4 +1,4 @@
-# DevOps
+﻿# DevOps
 
 Репозиторий оркестрации микросервисов frontend и backend версий 2.0
 Остановка и запуск через Docker Compose описаны в ЛР2
@@ -89,4 +89,5 @@ ansible-playbook run_playbook.yml --ask-vault-pass --tags stop
 
 Теги `install`, `clone`, `start`, `stop`, `deploy`
 
-Пароль для расшифровки vault-файлов `ilya_prokoshin`
+Пароль для расшифровки vault-файлов `devops123`
+
