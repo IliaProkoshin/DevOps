@@ -18,7 +18,7 @@ DevOps/
 
 ## Требования
 
-- Docker Desktop (Docker Engine + Docker Compose v2)
+Docker Desktop (Docker Engine + Docker Compose v2)
 
 ## Запуск
 
